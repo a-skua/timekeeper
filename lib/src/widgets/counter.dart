@@ -1,4 +1,5 @@
 import 'dart:async' as async;
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import '../util/time.dart';
 
@@ -29,6 +30,9 @@ class Counter extends StatefulWidget {
 }
 
 class CounterState extends State<Counter> {
+  // 音
+  final AudioPlayer _player = AudioPlayer();
+  bool _isPlaying = false;
   // 基準時間
   late Second _referenceTime = widget.initialTime;
   // 開始時間
@@ -46,16 +50,21 @@ class CounterState extends State<Counter> {
   void initState() {
     super.initState();
     _startTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _player.setSource(AssetSource('example.mp3'));
+    });
   }
 
   @override
   void dispose() {
+    _player.dispose();
     _stopTimer();
     super.dispose();
   }
 
   get _isActive => _timer?.isActive ?? false;
   get _isNotActive => !_isActive;
+  get _isJustTime => _remainingTime == 0;
 
   // 経過時間
   get _elapsedTime => _currentTime.difference(_startTime).inSeconds;
@@ -72,6 +81,7 @@ class CounterState extends State<Counter> {
       _lapStartTime = _startTime;
       _currentTime = _startTime;
       _lapTimes.clear();
+      _isPlaying = false;
     });
   }
 
@@ -88,6 +98,10 @@ class CounterState extends State<Counter> {
       _timer = async.Timer.periodic(const Duration(milliseconds: 200), (timer) {
         setState(() {
           _currentTime = DateTime.now();
+          if (_isJustTime && !_isPlaying) {
+            _player.resume();
+            _isPlaying = true;
+          }
         });
       });
     });
@@ -118,6 +132,7 @@ class CounterState extends State<Counter> {
       _lapTimes.add(_lapElapsedTime);
       _startTime = _currentTime.subtract(Duration(seconds: _elapsedTime));
       _lapStartTime = _currentTime;
+      _isPlaying = false;
     });
   }
 

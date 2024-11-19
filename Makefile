@@ -14,3 +14,7 @@ serve:
 serve-wasm:
 	cd build/web \
 		&& dhttpd -p 8000 '--headers=Cross-Origin-Embedder-Policy=credentialless;Cross-Origin-Opener-Policy=same-origin'
+
+.PHONY: fmt
+fmt:
+	dart format lib
