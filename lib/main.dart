@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:package_info_plus/package_info_plus.dart';
 import './src/home.dart';
 
 void main() {
@@ -18,8 +19,25 @@ class App extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
           useMaterial3: true,
         ),
-        home: const Scaffold(
-          body: Home(),
+        home: Scaffold(
+          body: const Home(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showAboutDialog(
+                context: context,
+                applicationName: title,
+                applicationVersion: '0.0.1',
+                applicationLegalese: '© 2021',
+              );
+              // PackageInfo.fromPlatform().then((info) => showAboutDialog(
+              //       context: context,
+              //       applicationName: info.appName,
+              //       applicationVersion: info.version,
+              //       applicationLegalese: info.buildNumber,
+              //     ));
+            },
+            child: const Icon(Icons.description),
+          ),
         ));
   }
 }
