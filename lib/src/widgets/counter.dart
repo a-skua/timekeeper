@@ -56,6 +56,7 @@ class CounterState extends State<Counter> {
 
   get _isActive => _timer?.isActive ?? false;
   get _isNotActive => !_isActive;
+  get _isJustTime => _remainingTime == 0;
 
   // 経過時間
   get _elapsedTime => _currentTime.difference(_startTime).inSeconds;
@@ -67,6 +68,8 @@ class CounterState extends State<Counter> {
   reset() => _resetTimer();
 
   _resetTimer() {
+    if (_isActive) return;
+
     setState(() {
       _startTime = DateTime.now();
       _lapStartTime = _startTime;
