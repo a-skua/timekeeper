@@ -76,6 +76,8 @@ class CounterState extends State<Counter> {
   reset() => _resetTimer();
 
   _resetTimer() {
+    if (_isActive) return;
+
     setState(() {
       _startTime = DateTime.now();
       _lapStartTime = _startTime;
